@@ -1,0 +1,151 @@
+﻿@model MenuItemViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="text-center text-success">Modifier un Menu</h4>
+<br />
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="@Model.MenuItem.Id"/>
+    <input type="hidden" asp-for="@Model.MenuItem.Image"/>
+
+    <div class="white-Background border row">
+        <div class="col-8">
+
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Name" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="MenuItem.Name" class="form-control" />
+                    <span asp-validation-for="MenuItem.Name"></span>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Description" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <textarea asp-for="MenuItem.Description" class="form-control"></textarea>
+                    <span asp-validation-for="MenuItem.Description"></span>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Price" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="MenuItem.Price" class="form-control" />
+                    <span asp-validation-for="MenuItem.Price"></span>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Image" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <input type="file" multiple asp-for="MenuItem.Image" class="form-control">
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.CategoryId" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <select id="ddlCategories" class="form-control" asp-for="MenuItem.CategoryId"
+                            asp-items="@(new SelectList(Model.ListCategories,"Id", "Name"))">
+                        <option>Please select one</option>
+                    </select>
+                    <span asp-validation-for="MenuItem.CategoryId"></span>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.SubCategoryId" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <select id="ddlSubCategories" class="form-control" asp-for="MenuItem.SubCategoryId"
+                            asp-items="@(new SelectList(Model.ListSubCategories,"Id", "Name"))">
+                    </select>
+                    <span asp-validation-for="MenuItem.SubCategoryId"></span>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Spicyness" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <select id="" class="form-control" asp-for="MenuItem.Spicyness"
+                            asp-items="@Html.GetEnumSelectList<MenuItem.Espicy>()">
+                        <option>Please select one</option>
+                    </select>
+                    <span asp-validation-for="MenuItem.Spicyness"></span>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-9 offset-3 ">
+                    <partial name="_UpdateAndBackToListButtonsPartial" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3 offset-1">
+            <img src="@Model.MenuItem.Image" style="border:1px solid #4800ff;
+                        width:100%; border-radius: 5px; margin-top:30px; " />
+        </div>
+
+    </div>
+
+</form>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function updateSubCategoriesList() {
+            var selectedCategory = document.getElementById("ddlCategories").value;
+            $list = $('#ddlSubCategories');
+            $.ajax({
+                url: '/Admin/subCategories/GetSubCategories/' + selectedCategory,
+                type: 'GET',
+                dataType: 'text',
+                success: function (data) {
+                    results = JSON.parse(data);
+                    $list.html('');
+                    var items = '';
+                    for (i in results) {
+                        items += '<option value="' + results[i].value + '" >' + results[i].text + '</option >';
+                    }
+                    $list.html(items);
+                }
+            });
+        }
+
+        $("#ddlCategories").on("change", function () {
+            updateSubCategoriesList();
+        });
+    </script>
+
+    <script>
+        tinymce.init(
+            {
+                selector: 'textarea',
+                plugins: 'lists',
+                menubar:'file edit format'
+            });
+    </script>
+
+}
+

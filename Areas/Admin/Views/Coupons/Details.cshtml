@@ -1,0 +1,82 @@
+﻿@model Coupon
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="text-center text-success">Details du Coupon</h4>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="white-Background border">
+
+        @if (Model.Picture != null)
+        {
+            <div class="row col-9 offset-3">
+                <img src="@("data: image/jpeg; base64, " + Convert.ToBase64String(Model.Picture))"
+                     style="border:1px solid #4800ff;
+                        width:100%; height:80px; border-radius: 5px; margin-top:30px; " />
+            </div>
+        }
+        <input type="hidden" asp-for="@Model.Id" />
+        <input type="hidden" asp-for="@Model.Picture" />
+
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+        <div class="row pt-4">
+            <div class="col-3 pt-1">
+                <label asp-for="Name" class="h6 text-dark"></label>
+            </div>
+            <div class="col-9">
+                <input asp-for="Name" class="form-control" readonly/>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-3 pt-1">
+                <label asp-for="CouponType" class="h6 text-dark"></label>
+            </div>
+            <div class="col-9">
+                <input asp-for="@Model.CouponType" class="form-control" readonly />
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-3 pt-1">
+                <label asp-for="Discount" class="h6 text-dark"></label>
+            </div>
+            <div class="col-9">
+                <input asp-for="Discount" class="form-control" readonly/>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-3 pt-1">
+                <label asp-for="MinimumAmount" class="h6 text-dark"></label>
+            </div>
+            <div class="col-9">
+                <input asp-for="MinimumAmount" class="form-control" readonly/>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-3 pt-1">
+                <label asp-for="IsActive" class="h6 text-dark"></label>
+            </div>
+            <div class="col-9">
+                <input asp-for="IsActive" disabled/>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-9 offset-3 ">
+                <partial name="_DetailsAndBackToListButtonsPartial" model="@Model.Id"/>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+

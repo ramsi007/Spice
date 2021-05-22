@@ -1,0 +1,105 @@
+﻿@model MenuItemViewModel
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="text-center text-danger">Supprimer un Menu</h4>
+<br />
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="@Model.MenuItem.Id" />
+    @*<input type="hidden" asp-for="@Model.MenuItem.Image" />*@
+
+    <div class="white-Background border row">
+        <div class="col-8">
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Name" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="MenuItem.Name" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Description" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <textarea asp-for="MenuItem.Description" class="form-control" disabled></textarea>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Price" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="MenuItem.Price" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.CategoryId" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <select id="ddlCategories" class="form-control" asp-for="MenuItem.CategoryId"
+                            asp-items="@(new SelectList(Model.ListCategories,"Id", "Name"))" disabled>
+                        <option>Please select one</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.SubCategoryId" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <select id="ddlSubCategories" class="form-control" asp-for="MenuItem.SubCategoryId"
+                            asp-items="@(new SelectList(Model.ListSubCategories,"Id", "Name"))" disabled>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-3 pt-1">
+                    <label asp-for="MenuItem.Spicyness" class="h6 text-dark"></label>
+                </div>
+                <div class="col-9">
+                    <select id="" class="form-control" asp-for="MenuItem.Spicyness"
+                            asp-items="@Html.GetEnumSelectList<MenuItem.Espicy>()" disabled>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-9 offset-3 ">
+                    <partial name="_DeleteAndBackToListButtonsPartial" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3 offset-1">
+            <img src="@Model.MenuItem.Image" style="border:1px solid #4800ff;
+                        width:100%; border-radius: 5px; margin-top:30px; " />
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        tinymce.init(
+            {
+                selector: 'textarea',
+                plugins: 'lists',
+                menubar:'file edit format'
+            });
+    </script>
+
+}
+

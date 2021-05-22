@@ -1,0 +1,134 @@
+﻿@model OrderListViewModel
+
+@{
+    ViewData["Title"] = "OrderPickup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="white-Background border">
+    <div class="row">
+        <div>
+            <h3 class="text-info text-center">Commandes prêtes</h3>
+        </div>
+    </div>
+</div>
+<form asp-action="OrderPickup" method="get">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="row">
+                <div class="col-md-4">
+                    @Html.Editor("SearchName", new { htmlAttributes = new { @class = "form-control mb-3", placeholder = "Nom ..." } })
+                </div>
+                <div class="col-md-4">
+                    @Html.Editor("SearchPhone", new { htmlAttributes = new { @class = "form-control mb-3", placeholder = "Phone ..." } })
+
+                </div>
+                <div class="col-md-4">
+                    @Html.Editor("SearchEmail", new { htmlAttributes = new { @class = "form-control mb-3", placeholder = "Email ..." } })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1">
+            <div class="row">
+                <button type="submit" class="btn btn-primary form-control mr-3">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @if (Model.Orders.Count == 0)
+    {
+        <h4 class="text-danger text-center">Aucune commande pête pour le moment ... </h4>
+    }
+    else
+    {
+        <table class="table table-striped border table-hover">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Orders[0].OrderHeader.Id)</th>
+                <th>@Html.DisplayNameFor(m => m.Orders[0].OrderHeader.PickupName)</th>
+                <th>@Html.DisplayNameFor(m => m.Orders[0].OrderHeader.ApplicationUser.Email)</th>
+                <th>@Html.DisplayNameFor(m => m.Orders[0].OrderHeader.PickUpTime)</th>
+                <th>@Html.DisplayNameFor(m => m.Orders[0].OrderHeader.OrderTotal)</th>
+                <th>Total de Menu</th>
+                <th></th>
+            </tr>
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(m => order.OrderHeader.Id)</td>
+                    <td>@Html.DisplayFor(m => order.OrderHeader.PickupName)</td>
+                    <td>@Html.DisplayFor(m => order.OrderHeader.ApplicationUser.Email)</td>
+                    <td>@Html.DisplayFor(m => order.OrderHeader.PickUpTime)</td>
+                    <td>@Html.DisplayFor(m => order.OrderHeader.OrderTotal)</td>
+                    <td>@Html.DisplayFor(m => order.OrderDetails.Count)</td>
+                    <td>
+                        <button type="button" class="btn btn-success showDetails"
+                                data-id="@order.OrderHeader.Id" data-toggle="modal">
+                            <i class="fas fa-list-alt"></i>&nbsp;Détails
+                        </button>
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        <div page-model="@Model.PagingInfo" page-classes-enabled="true" page-class="btn border"
+             page-class-normal="btn btn-light" page-class-selected="btn btn-info active" class="btn-group float-right">
+        </div>
+        <br />
+    }
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light">
+                <div class="col-10 offset-1">
+                    <center><h5 class="modal-title">Order Details</h5></center>
+                </div>
+                <div class="col-1">
+                    <button class="btn btn-outline-secondary float-right close" style="background-color:none;" aria-label="Close" data-dismiss="modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+    {
+    <script>
+        var PostBackURL = '/Customer/Orders/GetOrderDetails';
+        $(function () {
+
+            $(".showDetails").click(function () {
+
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+
+                $.ajax({
+                    type: "GET",
+                    url: PostBackURL,
+                    contentType: "text/html; charset=utf-8",
+                    data: { "id": id },
+                    cache: false,
+                    dataType: "html",
+                    success: function (data) {
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed");
+                    }
+                });
+            });
+        });
+
+    </script>
+}

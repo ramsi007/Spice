@@ -1,0 +1,86 @@
+﻿@model Coupon
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="text-center text-success">Creér un nouveau Coupon</h4>
+<br />
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="white-Background border">
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+        <div class="row pt-4">
+            <div class="col-2 pt-1">
+                <label asp-for="Name" class="h6 text-dark"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-2 pt-1">
+                <label asp-for="CouponType" class="h6 text-dark"></label>
+            </div>
+            <div class="col-6">
+                <select id="" class="form-control" asp-for="CouponType"
+                        asp-items="@Html.GetEnumSelectList<Coupon.ECouponType>()">
+                    <option>-- Selectionner un type --</option>
+                </select>
+                <span asp-validation-for="CouponType"></span>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-2 pt-1">
+                <label asp-for="Discount" class="h6 text-dark"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="Discount" class="form-control" />
+                <span asp-validation-for="Discount"></span>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-2 pt-1">
+                <label asp-for="MinimumAmount" class="h6 text-dark"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="MinimumAmount" class="form-control" />
+                <span asp-validation-for="MinimumAmount"></span>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-2 pt-1">
+                <label asp-for="Picture" class="h6 text-dark"></label>
+            </div>
+            <div class="col-6">
+                <input type="file" multiple asp-for="Picture" class="form-control">
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-2 pt-1">
+                <label asp-for="IsActive" class="h6 text-dark"></label>
+            </div>
+            <div class="col-6">
+                <input type="checkbox" asp-for="IsActive" />
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-6 offset-2 ">
+                <partial name="_CreateAndBackToListButtonsPartial" />
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
